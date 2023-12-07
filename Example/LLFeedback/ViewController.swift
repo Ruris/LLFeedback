@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LLFeedback
 
 class ViewController: UIViewController {
 
@@ -20,5 +21,12 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    @IBAction func modalAction(_ sender: Any) {
+        present(LLFeedback.viewController(), animated: true)
+    }
+    
+    @IBAction func pushAction(_ sender: Any) {
+        navigationController?.pushViewController(LLFeedback.viewController(), animated: true)
+    }
 }
 
