@@ -25,7 +25,7 @@ class LLFeedbackViewController: UIViewController {
     private let textView: QMUITextView = {
         let textView = QMUITextView()
         textView.maximumTextLength = 500
-        textView.placeholder = NSLocalizedString("请输入您的建议或问题", comment: "请输入您的建议或问题")
+        textView.placeholder = LLFeedback.LocalizedString("请输入您的建议或问题", comment: "请输入您的建议或问题")
         textView.placeholderColor = .systemGray2
         textView.font = .systemFont(ofSize: 17)
         textView.layer.cornerRadius = 5.0
@@ -46,10 +46,12 @@ class LLFeedbackViewController: UIViewController {
     private let textField: QMUITextField = {
         let textField = QMUITextField()
         textField.backgroundColor = .systemBackground
-        textField.placeholder = NSLocalizedString("请留下您的邮箱方便我们联系您", comment: "请留下您的邮箱方便我们联系您")
+        textField.placeholder = LLFeedback.LocalizedString("请留下您的邮箱方便我们联系您", comment: "请留下您的邮箱方便我们联系您")
         textField.textInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
         textField.layer.cornerRadius = 5.0
         textField.placeholderColor = .systemGray2
+        textField.keyboardType = .emailAddress
+        textField.maximumTextLength = 50
         textField.font = .systemFont(ofSize: 17)
         return textField
     }()
@@ -68,6 +70,10 @@ class LLFeedbackViewController: UIViewController {
     
     // MARK: Action
     
+    @objc private func didTextChanged(_ textView: QMUITextView) {
+        
+    }
+    
     /// 发送
     @objc private func sendAction() {
         
@@ -84,7 +90,7 @@ extension LLFeedbackViewController {
     // MARK: - UI
     
     private func setupUI() {
-        title = NSLocalizedString("用户反馈", comment: "用户反馈")
+        title = LLFeedback.LocalizedString("用户反馈", comment: "用户反馈")
         view.backgroundColor = .systemGroupedBackground
         
         /// 提交按钮
@@ -125,5 +131,21 @@ extension LLFeedbackViewController {
             make.top.equalTo(backView.snp.bottom).offset(20.0)
             make.height.equalTo(44)
         }
+        
+        textView.delegate = self
+    }
+}
+
+extension LLFeedbackViewController: QMUITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let len = (textView.text as NSString).replacingCharacters(in: range, with: text).count
+        
+        if len <= 500 {
+            lenLabel.text = "\(len) / 500"
+        } else {
+            lenLabel.text = "\(textView.text.count) / 500"
+        }
+        return len < 500
     }
 }

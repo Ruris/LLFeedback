@@ -1,0 +1,10 @@
+/* 
+  LLFeedback.strings
+  Pods
+
+  Created by ZHK on 2023/12/8.
+  
+*/
+"用户反馈" = "Feedback";
+"请输入您的建议或问题" = "Please enter your suggestion or question.";
+"请留下您的邮箱方便我们联系您" = "Please leave your email for us to contact you.";
