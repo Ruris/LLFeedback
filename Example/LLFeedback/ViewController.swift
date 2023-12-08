@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func modalAction(_ sender: Any) {
-        present(LLFeedback.viewController(), animated: true)
+        present(UINavigationController(rootViewController: LLFeedback.viewController()), animated: true)
     }
     
     @IBAction func pushAction(_ sender: Any) {

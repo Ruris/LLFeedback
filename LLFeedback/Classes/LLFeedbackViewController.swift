@@ -42,6 +42,18 @@ class LLFeedbackViewController: UIViewController {
         return label
     }()
     
+    /// 邮箱
+    private let textField: QMUITextField = {
+        let textField = QMUITextField()
+        textField.backgroundColor = .systemBackground
+        textField.placeholder = NSLocalizedString("请留下您的邮箱方便我们联系您", comment: "请留下您的邮箱方便我们联系您")
+        textField.textInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        textField.layer.cornerRadius = 5.0
+        textField.placeholderColor = .systemGray2
+        textField.font = .systemFont(ofSize: 17)
+        return textField
+    }()
+    
     // MARK: -
 
     override func viewDidLoad() {
@@ -54,15 +66,39 @@ class LLFeedbackViewController: UIViewController {
         textView.becomeFirstResponder()
     }
     
+    // MARK: Action
+    
+    /// 发送
+    @objc private func sendAction() {
+        
+    }
+    
+    /// 返回
+    @objc private func backAction() {
+        navigationController?.dismiss(animated: true)
+    }
+}
+
+extension LLFeedbackViewController {
+    
     // MARK: - UI
     
     private func setupUI() {
         title = NSLocalizedString("用户反馈", comment: "用户反馈")
         view.backgroundColor = .systemGroupedBackground
         
+        /// 提交按钮
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "paperplane"), style: .done, target: self, action: #selector(sendAction))
+        
+        /// 如果当前页面是被 `模态` 出现, 则自定义返回按钮
+        if presentingViewController != nil {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .done, target: self, action: #selector(backAction))
+        }
+        
         view.addSubview(backView)
         backView.addSubview(textView)
         backView.addSubview(lenLabel)
+        view.addSubview(textField)
         
         backView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
@@ -82,6 +118,12 @@ class LLFeedbackViewController: UIViewController {
             make.bottom.equalToSuperview().offset(-10.0)
             make.width.equalTo(100.0)
             make.height.equalTo(15.0)
+        }
+        
+        textField.snp.makeConstraints { make in
+            make.left.right.equalTo(backView)
+            make.top.equalTo(backView.snp.bottom).offset(20.0)
+            make.height.equalTo(44)
         }
     }
 }
