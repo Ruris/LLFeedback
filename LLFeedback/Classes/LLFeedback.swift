@@ -58,7 +58,10 @@ public struct LLFeedback {
     }
     
     /// 发送邮件界面
-    /// - Parameter target: modal 起邮件界面的视图控制器
+    /// - Parameters:
+    ///   - recipient: 邮箱地址
+    ///   - viewController: modal 起邮箱视图的控制器
+    /// - Returns: 是否处理发送成功 (如果触发跳转默认为发送成功)
     @MainActor
     public static func feedback(sendTo recipient: String, modalBy viewController: UIViewController) async throws -> Bool {
         guard repeatTimeout else {
