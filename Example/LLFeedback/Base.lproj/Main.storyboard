@@ -18,22 +18,37 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="9Xe-vz-6Dq">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="ul3-Ir-dzn">
+                                        <rect key="frame" x="20" y="49.5" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ul3-Ir-dzn" id="G9e-JQ-UXy">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="vXZ-lx-hvc" id="i4O-pW-nPR"/>
+                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="OG8-Rk-VdX"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="9Xe-vz-6Dq" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="R4A-LT-he0"/>
+                            <constraint firstAttribute="trailing" secondItem="9Xe-vz-6Dq" secondAttribute="trailing" id="fjB-Cb-W1E"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="9Xe-vz-6Dq" secondAttribute="bottom" id="p84-Sp-HIZ"/>
+                            <constraint firstItem="9Xe-vz-6Dq" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="r6P-rJ-3K5"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="cla-gj-HY2">
-                        <rightBarButtonItems>
-                            <barButtonItem title="Push" id="UIe-Xa-KwB">
-                                <connections>
-                                    <action selector="pushAction:" destination="vXZ-lx-hvc" id="0Te-pq-iNs"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Modal" id="NQc-gC-LMz">
-                                <connections>
-                                    <action selector="modalAction:" destination="vXZ-lx-hvc" id="ft1-f4-u01"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="cla-gj-HY2"/>
+                    <connections>
+                        <outlet property="tableView" destination="9Xe-vz-6Dq" id="nB9-LV-Bmg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

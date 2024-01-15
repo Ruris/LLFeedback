@@ -1,0 +1,8 @@
+/* 
+  InfoPlist.strings
+  LLFeedback
+
+  Created by ZHK on 2024/1/15.
+  Copyright © 2024 CocoaPods. All rights reserved.
+*/
+"CFBundleDisplayName" = "国际化的应用名称";
