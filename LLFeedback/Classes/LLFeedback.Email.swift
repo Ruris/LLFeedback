@@ -17,16 +17,17 @@ extension LLFeedback {
     ///   - recipient: 邮箱地址
     ///   - viewController: modal 邮件界面的视图控制器
     /// - Returns: 是否发送完成
-    public static func send(sendTo recipient: String, presentBy viewController: UIViewController) async throws -> Bool {
-//        let recipient = "zhk1024@foxmail.com"
+    public static func send(email recipient: String, presentBy viewController: UIViewController) async throws -> Bool {
         // 尝试调起发送邮件页面, 如果调起失败就跳转到邮件 app
         if MFMailComposeViewController.canSendMail() {
             return try await email(sendTo: recipient, presentBy: viewController)
         } else {
-            try emailApp(sendTo: recipient)
+            try email(byApp: recipient)
             return true
         }
     }
+    
+    
     
     @MainActor
     /// 显示 Emali 发送界面
@@ -36,7 +37,7 @@ extension LLFeedback {
     /// - Returns: 是否发送成功
     public static func email(sendTo recipient: String, presentBy viewController: UIViewController) async throws -> Bool {
         try await withCheckedThrowingContinuation { continuation in
-            let subject = NSLocalizedString("我的书橱", comment: "我的书橱")
+            let subject = appName
             let body = "version: \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")"
             let delegator = EMailComposeDelegator { success, message in
                 if success {
@@ -58,7 +59,7 @@ extension LLFeedback {
     @MainActor
     /// 打开邮件 app
     /// - Parameter recipient: 邮箱地址
-    public static func emailApp(sendTo recipient: String) throws {
+    public static func email(byApp recipient: String) throws {
         let subject = NSLocalizedString("我的书橱", comment: "我的书橱")
         let body = "version: \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")"
         let email = "\(recipient)?subject=\(subject)&body=\(body)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
