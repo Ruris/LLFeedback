@@ -23,6 +23,10 @@ public struct LLFeedback {
     /// 存储最后一次询问的时间 (时间戳)
     private static var lastDate: Int
     
+    @Standard(defaultValue: false, key: "_LLFeedback_Scored_01")
+    /// 是否已经进行过评分
+    private static var scored: Bool
+    
     /// 是否自动进行流程
     private static var auto: Bool = false
     
@@ -43,12 +47,36 @@ public struct LLFeedback {
         return Bundle(path: path)
     }()
     
+    /// 应用名称 (优先读取国际化的名称, 如果都读取不到就读取 Bundle ID)
+    public static var appName: String {
+        Bundle.main.localizedInfoDictionary?["CFBundleDisplayName"] as? String ??
+        Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String ??
+        Bundle.main.infoDictionary?["CFBundleIdentifier"] as! String
+    }
+    
     /// 启动
     /// - Parameter auto: 是否自动默认 (自动弹起询问框并进行后续逻辑判断)
     /// - Parameter interval: 用户上次未进行打分, 中间间隔多久再次进行询问 (默认为 7 天)
     public static func start(_ auto: Bool, interval: Int = 604800) {
+        // 如果最后一次询问时间为默认值, 则判定为第一次启动, 重置为当前时间
+        if lastDate == 0 {
+            lastDate = Int(CFAbsoluteTimeGetCurrent())
+        }
         Self.auto = auto
         Self.repeatInterval = interval
+    }
+    
+    /// 重置最后一次弹框时间 (仅限测试使用)
+    /// - Parameter lastDate: (最后一次弹框时间) 默认值为 1
+    public static func reset(lastDate: Int = 1) {
+        Self.lastDate = lastDate
+        scored = false
+    }
+    
+    /// 标记本次已经打过分了
+    public static func markScored() {
+        lastDate = Int(CFAbsoluteTimeGetCurrent())
+        scored = true
     }
     
     /// 用户反馈界面
@@ -64,18 +92,24 @@ public struct LLFeedback {
     /// - Returns: 是否处理发送成功 (如果触发跳转默认为发送成功)
     @MainActor
     public static func feedback(sendTo recipient: String, modalBy viewController: UIViewController) async throws -> Bool {
-        guard repeatTimeout else {
+        /// 如果刚询问过, 或者已经打过分了, 就不再询问了
+        guard repeatTimeout, scored == false else {
             return false
         }
         /// 首先试探用户对 app 的态度
         /// 如果不满意, 就让用户进行反馈
         /// 如果还算满意, 就让用户进行打分
+        let success: Bool
         if await probe(modalBy: viewController) == false {
-            return try await email(sendTo: recipient, presentBy: viewController)
+            success = try await send(email: recipient, presentBy: viewController)
         } else {
-            store(scoreBy: viewController)
-            return true
+            success = store(scoreBy: viewController)
         }
+        /// 如果操作成功了, 就标记为已经打过分了
+        if success {
+            markScored()
+        }
+        return success
     }
 }
 
